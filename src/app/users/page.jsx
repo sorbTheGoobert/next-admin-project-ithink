@@ -11,6 +11,7 @@ const Users = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [data, setData] = useState([]);
+  const [showAmount, setShowAmount] = useState(10);
 
   useEffect(() => {
     fetch("/api/users")
@@ -32,9 +33,11 @@ const Users = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <UsersTable data={data} />
+          <UsersTable data={data} amount={showAmount}/>
           <div className="flex justify-center p-8">
-            <Button variant="outline">Load more...</Button>
+            <Button variant="outline" onClick={() => {
+              setShowAmount(showAmount + 10);
+            }}>Load more...</Button>
           </div>
         </CardContent>
       </Card>
