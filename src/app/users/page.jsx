@@ -42,6 +42,7 @@ const Users = () => {
         </CardContent>
       </Card>
 
+      {/* <UserCreateDialog open={createModalOpen} onClose={setCreateModalOpen} dataSetter={setData} /> */}
       <UserCreateDialog open={createModalOpen} onClose={setCreateModalOpen} />
     </div>
   );
