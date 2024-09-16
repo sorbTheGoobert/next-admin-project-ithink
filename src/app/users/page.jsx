@@ -11,7 +11,7 @@ const Users = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const [showAmount, setShowAmount] = useState(100);
+  const [showAmount, setShowAmount] = useState(10);
 
   const render = (type, extradata) => {
     if (type == "create") {
@@ -19,7 +19,12 @@ const Users = () => {
     } else if (type == "delete") {
       setData([...data].filter((elem) => elem.id != extradata))
     } else if (type == "change") {
-      setData([...data])
+      setData(data.map(elem => {
+        if (elem.id == extradata.id) {
+          return extradata
+        }
+        return elem
+      }))
     }
   }
 

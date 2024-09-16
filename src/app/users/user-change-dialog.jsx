@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 
-export const UserChangeDialog = ({ open, onClose, onChange, data}) => {
-  const [image, setImage] = useState(data.imageUrl);
-  const [firstname, setFirstname] = useState(data.firstname);
-  const [lastname, setLastname] = useState(data.lastname);
-  const [email, setEmail] = useState(data.email);
+export const UserChangeDialog = ({ open, onClose, onChange, data }) => {
+  const [image, setImage] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
   const request = () => {
     fetch(`http://localhost:3000/api/users/${data.id}`, {
       method: "PUT",
@@ -23,8 +23,8 @@ export const UserChangeDialog = ({ open, onClose, onChange, data}) => {
       }
     })
       .then((res) => res.json())
-      .then(() => {
-        onChange("change", data.id)
+      .then((resData) => {
+        onChange("change", resData.data)
       })
     //   setData(
     //     fetch("/api/users")
@@ -34,6 +34,12 @@ export const UserChangeDialog = ({ open, onClose, onChange, data}) => {
     //       })
     //   );
   }
+  useEffect(() => {
+    setEmail(data.email)
+    setFirstname(data.firstname)
+    setLastname(data.lastname)
+    setImage(data.imageUrl)
+  }, [data])
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -59,7 +65,7 @@ export const UserChangeDialog = ({ open, onClose, onChange, data}) => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => {onClose(false); console.log(data)}} variant="outline" type="button">
+          <Button onClick={() => { onClose(false) }} variant="outline" type="button">
             Cancel
           </Button>
           <Button type="submit" onClick={request}>Save</Button>
