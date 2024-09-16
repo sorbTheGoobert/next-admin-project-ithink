@@ -11,7 +11,17 @@ const Users = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const [showAmount, setShowAmount] = useState(10);
+  const [showAmount, setShowAmount] = useState(100);
+
+  const render = (type, extradata) => {
+    if (type == "create") {
+      setData([...data, extradata]);
+    } else if (type == "delete") {
+      setData([...data].filter((elem) => elem.id != extradata))
+    } else if (type == "change") {
+      setData([...data])
+    }
+  }
 
   useEffect(() => {
     fetch("/api/users")
@@ -33,7 +43,7 @@ const Users = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <UsersTable data={data} amount={showAmount}/>
+          <UsersTable data={data} amount={showAmount} onDelete={render} render={render} />
           <div className="flex justify-center p-8">
             <Button variant="outline" onClick={() => {
               setShowAmount(showAmount + 10);
@@ -43,7 +53,7 @@ const Users = () => {
       </Card>
 
       {/* <UserCreateDialog open={createModalOpen} onClose={setCreateModalOpen} dataSetter={setData} /> */}
-      <UserCreateDialog open={createModalOpen} onClose={setCreateModalOpen} />
+      <UserCreateDialog open={createModalOpen} onClose={setCreateModalOpen} onCreate={render} />
     </div>
   );
 };

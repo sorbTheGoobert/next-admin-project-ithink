@@ -15,11 +15,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MoreHorizontal, Settings } from "lucide-react";
+import { UserChangeDialog } from "./user-change-dialog";
+import { useState } from "react";
 
 export function UsersTable(props) {
-  const { data, amount } = props;
+  const { data, amount, render } = props;
   const showAmount = amount;
   const [searchVal, setSearchVal] = React.useState("");
+  const [changeModalOpen, setChangeModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(false);
+  const deleteUser = (id) => {
+    fetch(`http://localhost:3000/api/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json;"
+      }
+    }).then(() => render("delete", id))
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -62,10 +75,10 @@ export function UsersTable(props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigator.clipboard.writeText("temkanibno@gmail.com")}>Copy Email</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.email)}>Copy Email</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { setChangeModalOpen(true); setEditingId(item) }}>Edit</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { deleteUser(item.id) }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableHead>
@@ -92,10 +105,10 @@ export function UsersTable(props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigator.clipboard.writeText("temkanibno@gmail.com")}>Copy Email</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.email)}>Copy Email</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { setChangeModalOpen(true); setEditingId(item) }}>Edit</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { deleteUser(item.id) }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableHead>
@@ -104,6 +117,7 @@ export function UsersTable(props) {
           </TableBody>
         </Table>
       </div>
+      <UserChangeDialog open={changeModalOpen} onClose={setChangeModalOpen} onChange={render} data={editingId} />
     </div>
   );
 }

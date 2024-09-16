@@ -4,15 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 
-// export const UserCreateDialog = (props, { open, onClose }) => {
-export const UserCreateDialog = ({ open, onClose, onCreate }) => {
-  const [image, setImage] = useState("https://preview.redd.it/i-used-to-have-this-v1-plush-that-i-used-to-pour-fresh-v0-hgvwy76gr3k91.jpg?width=640&crop=smart&auto=webp&s=9cef1f14355e8ed84ae3f2e8fff6850f13d64b92");
-  const [firstname, setFirstname] = useState("Goob");
-  const [lastname, setLastname] = useState("V1");
-  const [email, setEmail] = useState("GoobV1@gmail.com");
+export const UserChangeDialog = ({ open, onClose, onChange, data}) => {
+  const [image, setImage] = useState(data.imageUrl);
+  const [firstname, setFirstname] = useState(data.firstname);
+  const [lastname, setLastname] = useState(data.lastname);
+  const [email, setEmail] = useState(data.email);
   const request = () => {
-    fetch("http://localhost:3000/api/users", {
-      method: "POST",
+    fetch(`http://localhost:3000/api/users/${data.id}`, {
+      method: "PUT",
       body: JSON.stringify({
         "firstname": `${firstname}`,
         "lastname": `${lastname}`,
@@ -24,8 +23,8 @@ export const UserCreateDialog = ({ open, onClose, onCreate }) => {
       }
     })
       .then((res) => res.json())
-      .then((data) => {
-        onCreate("create", data.data)
+      .then(() => {
+        onChange("change", data.id)
       })
     //   setData(
     //     fetch("/api/users")
@@ -39,7 +38,7 @@ export const UserCreateDialog = ({ open, onClose, onCreate }) => {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create user</DialogTitle>
+          <DialogTitle>Change user</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -60,7 +59,7 @@ export const UserCreateDialog = ({ open, onClose, onCreate }) => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => onClose(false)} variant="outline" type="button">
+          <Button onClick={() => {onClose(false); console.log(data)}} variant="outline" type="button">
             Cancel
           </Button>
           <Button type="submit" onClick={request}>Save</Button>
