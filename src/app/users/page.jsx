@@ -12,7 +12,7 @@ const Users = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [data, setData] = useState([]);
-  const [showAmount, setShowAmount] = useState(100);
+  const [showAmount, setShowAmount] = useState(10);
 
   const render = (type, extradata) => {
     if (type == "create") {

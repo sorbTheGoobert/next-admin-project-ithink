@@ -9,7 +9,7 @@ export const Header = () => {
     <div className="border-b bg-background">
       <div className="container flex items-center justify-between py-3 mx-auto">
         <div className="flex items-center gap-4">
-          <Link href={"/"}>
+          <Link href={"/users"}>
             <LayoutDashboard />
           </Link>
         </div>
