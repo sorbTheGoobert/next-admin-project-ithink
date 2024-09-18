@@ -17,21 +17,16 @@ import { Input } from "@/components/ui/input";
 import { MoreHorizontal, Settings } from "lucide-react";
 import { UserChangeDialog } from "./user-change-dialog";
 import { useState } from "react";
+import { UserDeleteDialog } from "./user-delete-dialog";
 
 export function UsersTable(props) {
   const { data, amount, render } = props;
   const showAmount = amount;
   const [searchVal, setSearchVal] = React.useState("");
   const [changeModalOpen, setChangeModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(false);
-  const deleteUser = (id) => {
-    fetch(`http://localhost:3000/api/users/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json;"
-      }
-    }).then(() => render("delete", id))
-  }
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(0);
+  const [deletingId, setDeletingId] = useState(0);
 
   return (
     <div className="w-full">
@@ -78,7 +73,7 @@ export function UsersTable(props) {
                       <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.email)}>Copy Email</DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => { setChangeModalOpen(true); setEditingId(item) }}>Edit</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => { deleteUser(item.id) }}>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { setDeleteModalOpen(true); setDeletingId(item) }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableHead>
@@ -108,7 +103,7 @@ export function UsersTable(props) {
                       <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.email)}>Copy Email</DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => { setChangeModalOpen(true); setEditingId(item) }}>Edit</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => { deleteUser(item.id) }}>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => { setDeleteModalOpen(true); setDeletingId(item) }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableHead>
@@ -118,6 +113,7 @@ export function UsersTable(props) {
         </Table>
       </div>
       <UserChangeDialog open={changeModalOpen} onClose={setChangeModalOpen} onChange={render} data={editingId} />
+      <UserDeleteDialog open={deleteModalOpen} onClose={setDeleteModalOpen} onDelete={render} data={deletingId}/>
     </div>
   );
 }
